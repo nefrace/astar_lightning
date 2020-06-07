@@ -1,8 +1,8 @@
 extends Node2D
 
-export var points_w = 120
-export var points_h = 60
-export var points_gap = 10
+export var points_w = 240
+export var points_h = 120
+export var points_gap = 5
 
 var astar : AStar2D = AStar2D.new()
 # Called when the node enters the scene tree for the first time.
@@ -11,12 +11,12 @@ func _ready():
 	
 	for i in range(points_w): # Fill it with points
 		for j in range(points_h):
-			astar.add_point(i+j*points_w, Vector2(i*points_gap, j*points_gap), rand_range(1, 10)) 
+			astar.add_point(i+j*points_w, Vector2(i*points_gap, j*points_gap), rand_range(1, 100000)) 
 	
 	for i in range(points_w):  # Connect neighbors to each other
 		for j in range(points_h):
-			for ii in range(-1, 1):
-				for jj in range(-1, 1):
+			for ii in range(-1, 2):
+				for jj in range(-1, 2):
 					var di = i+ii
 					var dj = j+jj
 					var ida = i+j*points_w
@@ -31,7 +31,8 @@ func on_timeout(): # When timer is out
 	var b = Vector2(rand_range(0, points_w * points_gap), points_h * points_gap) # Random bottom point
 	var l = lightning(a, b, 5, self) # Generate lightning
 	
-	$Tween.interpolate_property(l, "modulate", Color(1,1,1,1), Color(1,1,1,0),0.5, Tween.TRANS_BOUNCE, Tween.EASE_IN) # Fade smooth
+	$Tween.interpolate_property(l, "modulate", Color(1,1,1,1), Color(1,1,1,0),1, Tween.TRANS_BOUNCE, Tween.EASE_IN) # Fade smooth
+	$Tween.interpolate_callback(l, 1, "queue_free")
 	$Tween.start()
 	
 	$Timer.wait_time = rand_range(.1, 1) 

@@ -5,7 +5,23 @@
 [node name="LightningGenerator" type="Node2D"]
 script = ExtResource( 1 )
 
+[node name="ColorRect" type="ColorRect" parent="."]
+margin_right = 1146.0
+margin_bottom = 717.0
+color = Color( 0.0431373, 0.0431373, 0.137255, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="Tween" type="Tween" parent="."]
 
 [node name="Timer" type="Timer" parent="."]
 autostart = true
+
+[node name="back" type="ColorRect" parent="."]
+margin_right = 1058.0
+margin_bottom = 639.0
+color = Color( 0.992157, 0.984314, 0.984314, 0 )
+__meta__ = {
+"_edit_use_anchors_": false
+}

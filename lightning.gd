@@ -1,6 +1,6 @@
 extends Node2D
 
-export var points_w = 240
+export var points_w = 200
 export var points_h = 120
 export var points_gap = 5
 
@@ -11,7 +11,7 @@ func _ready():
 	
 	for i in range(points_w): # Fill it with points
 		for j in range(points_h):
-			astar.add_point(i+j*points_w, Vector2(i*points_gap, j*points_gap), rand_range(1, 100000)) 
+			astar.add_point(i+j*points_w, Vector2(i*points_gap, j*points_gap), rand_range(1, 1000)) 
 	
 	for i in range(points_w):  # Connect neighbors to each other
 		for j in range(points_h):
@@ -31,11 +31,12 @@ func on_timeout(): # When timer is out
 	var b = Vector2(rand_range(0, points_w * points_gap), points_h * points_gap) # Random bottom point
 	var l = lightning(a, b, 5, self) # Generate lightning
 	
-	$Tween.interpolate_property(l, "modulate", Color(1,1,1,1), Color(1,1,1,0),1, Tween.TRANS_BOUNCE, Tween.EASE_IN) # Fade smooth
-	$Tween.interpolate_callback(l, 1, "queue_free")
+	$Tween.interpolate_property(l, "modulate", Color(1,1,1,1), Color(1,1,1,0), .6, Tween.TRANS_BOUNCE, Tween.EASE_IN) # Fade smooth
+	$Tween.interpolate_property($back, "color", Color(1,1,1,0.7), Color(1,1,1,0), .3, Tween.TRANS_BACK, Tween.EASE_IN)
+	$Tween.interpolate_callback(l, .6, "queue_free")
 	$Tween.start()
 	
-	$Timer.wait_time = rand_range(.1, 1) 
+	$Timer.wait_time = rand_range(.3, 3) 
 	$Timer.start()
 
 func lightning(start_point, end_point, width, parent):
@@ -43,7 +44,11 @@ func lightning(start_point, end_point, width, parent):
 	var end_id = astar.get_closest_point(end_point)
 	var path = astar.get_point_path(start_id, end_id) # Calculate path
 	var line : Line2D = Line2D.new() # Visual line class
+	for i in range(path.size()-1, 1, -1):
+		if rand_range(0, 10) < 5:
+			path.remove(i)
 	line.width = width
+	line.default_color = Color.white
 	line.points = path
 	parent.add_child(line)
 	if width > 1: # if line is thick, we can generate some branches
